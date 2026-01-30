@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NovaGames</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background: radial-gradient(circle at top, #0f172a, #020617);
+  color: white;
+  min-height: 100vh;
+}
+
+/* NAVBAR */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(12px);
+  background: rgba(2,6,23,0.6);
+}
+
+.navbar h1 {
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.navbar span {
+  color: #38bdf8;
+}
+
+#searchBar {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: white;
+  padding: 12px 18px;
+  border-radius: 30px;
+  width: 260px;
+  outline: none;
+}
+
+#searchBar:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 20px rgba(56,189,248,0.4);
+}
+
+/* GRID */
+.games {
+  padding: 50px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+/* CARD */
+.card {
+  display: block;
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: pointer;
+  aspect-ratio: 16 / 9;
+  transform: translateY(40px) scale(0.95);
+  opacity: 0;
+  animation: popIn 0.8s ease forwards;
+  text-decoration: none;
+  color: inherit;
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+/* OVERLAY */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(2,6,23,0.9), rgba(2,6,23,0.1));
+  display: flex;
+  align-items: flex-end;
+  padding: 20px;
+}
+
+.overlay h3 {
+  font-size: 22px;
+  transform: translateY(20px);
+  opacity: 0;
+  transition: all 0.4s ease;
+}
+
+/* HOVER */
+.card:hover img {
+  transform: scale(1.12);
+}
+
+.card:hover .overlay h3 {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ANIMATION */
+@keyframes popIn {
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="navbar">
+  <h1>Nova<span>Games</span></h1>
+  <input type="text" id="searchBar" placeholder="Search games...">
+</header>
+
+<section class="games" id="gameGrid"></section>
+
+<script>
+const games = [
+  { id: "Friday Night Funkin", title: "Friday Night Funkin", image: "images/Friday Night funkin.jpg" },
+  { id: "void-hunters", title: "Binding of isac wrath of the lamb", image: "images/Binding Of Isac Wrath of the lamb.jpg" },
+  { id: "neon-skies", title: "Neon Skies", image: "images/neon-skies.jpg" },
+  { id: "frost-realm", title: "Frost Realm", image: "images/frost-realm.jpg" }
+];
+
+const grid = document.getElementById("gameGrid");
+const searchBar = document.getElementById("searchBar");
+
+function render(list) {
+  grid.innerHTML = "";
+  list.forEach((game, i) => {
+    const card = document.createElement("a");
+    card.href = `Games/${game.id}/index.html`;
+    card.className = "card";
+    card.style.animationDelay = `${i * 0.08}s`;
+
+    card.innerHTML = `
+      <img src="${game.image}">
+      <div class="overlay">
+        <h3>${game.title}</h3>
+      </div>
+    `;
+
+    grid.appendChild(card);
+  });
+}
+
+searchBar.addEventListener("input", () => {
+  const value = searchBar.value.toLowerCase();
+  render(games.filter(g => g.title.toLowerCase().includes(value)));
+});
+
+render(games);
+</script>
+
+</body>
+</html>
